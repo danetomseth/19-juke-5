@@ -1,25 +1,26 @@
 'use strict';
 
-juke.directive('doubleClick', function(PlayerFactory) {
+juke.directive('doubleClick', function($interval, $timeout) {
     return {
         restrict: 'A',
         scope: {
             doubleClick: '&'
         },
         link: function(scope, element, attr) {
-            // element.on('click',function() {
-            //     //scope.doubleClick
-            //     element.css('background-color', 'blue');
-            // }) 
-            // scope.toggle = function(song) {
-            //     if (song !== PlayerFactory.getCurrentSong()) {
-            //         PlayerFactory.start(song, scope.songs);
-            //     } else if (PlayerFactory.isPlaying()) {
-            //         PlayerFactory.pause();
-            //     } else {
-            //         PlayerFactory.resume();
-            //     }
-            // };
+            var state = 'nonClicked';
+            var count = 0;
+            element.on('click',function() {
+                count++;
+                state = (state == 'paused' ? 'playing' : 'paused');
+                if(count === 2) {
+                    console.log('clicked twice')
+                    scope.doubleClick();
+                }
+                $interval(function () {
+                    count = 0;
+                }, 500, 1)
+            }) 
+            
             
         }
     }
